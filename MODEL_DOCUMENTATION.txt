@@ -1,0 +1,200 @@
+MULTIMODAL FAKE NEWS DETECTION
+MODEL DOCUMENTATION
+===================
+
+PROJECT
+-------
+Multimodal Fake News Detection in Low-Resource Languages Using Transformers
+
+Purpose:
+Detect potentially fake or misleading news across multiple Indian languages
+using transformer-based NLP and multimodal analysis.
+
+CURRENT ML STATUS
+-----------------
+
+1. TEXT MODEL
+-------------
+
+Model:
+    MuRIL (google/muril-base-cased)
+
+Current checkpoint:
+    ./models/muril_combined
+
+Purpose:
+    Multilingual text classification for fake/real news detection.
+
+Input:
+    News title/text
+
+Output:
+    REAL or FAKE + confidence score
+
+Training setup:
+    - Combined Indic + English news data
+    - Maximum sequence length: 192
+    - Train batch size: 8
+    - Evaluation batch size: 8
+    - Gradient accumulation: 2
+    - Effective batch size: 16
+    - Learning rate: 2e-5
+    - Epochs: 1
+    - Weight decay: 0.01
+    - FP16 enabled
+
+Combined dataset:
+    Indic samples: 49,426
+    English samples: 44,898
+    Total: 94,324
+
+Split:
+    Training: 75,459
+    Validation: 9,432
+    Test: 9,433
+
+Validation:
+    Accuracy:  0.9984
+    Precision: 0.9996
+    Recall:    0.9976
+    F1-score:  0.9986
+
+Test:
+    Accuracy:  0.9976
+    Precision: 0.9987
+    Recall:    0.9970
+    F1-score:  0.9979
+
+IMPORTANT:
+    These are dataset/split-specific results and should not be interpreted
+    as universal real-world fake-news detection accuracy. Dataset/source
+    patterns or leakage may contribute to unusually high scores.
+
+    The classifier is not a standalone factual verification system.
+    A high FAKE confidence does not by itself establish that a claim is
+    factually false.
+
+
+2. BASELINE MODEL
+-----------------
+
+Model:
+    TF-IDF + Logistic Regression
+
+Purpose:
+    Traditional machine-learning baseline.
+
+Test:
+    Accuracy:  0.9900
+    Precision: 0.9871
+    Recall:    0.9968
+    F1-score:  0.9919
+
+
+3. IMAGE MODEL
+-------------
+
+Status:
+    Pretrained image encoder to be integrated into the multimodal pipeline.
+
+Direction:
+    Lightweight pretrained visual encoder such as CLIP.
+
+Purpose:
+    Convert a post image into a visual representation that can be combined
+    with the textual representation.
+
+No image-model metrics are reported yet.
+
+
+4. MULTIMODAL FUSION
+--------------------
+
+Status:
+    Planned / next implementation stage.
+
+Intended architecture:
+
+    Text -> MuRIL -> text representation
+                                                   -> Fusion -> Fake/Real classifier
+                         /
+    Image -> image encoder -> image representation
+
+The fusion model should learn from paired text-image fake-news examples.
+
+No multimodal results should be claimed until this component has actually
+been trained and evaluated.
+
+
+5. REAL-TIME VERIFICATION
+-------------------------
+
+Status:
+    Planned backend component.
+
+Purpose:
+    Supplement local ML predictions with current external evidence.
+
+Possible verification states:
+    VERIFIED
+    SUPPORTED
+    DISPUTED
+    UNSUPPORTED
+    NEEDS_CONTEXT
+    UNVERIFIED
+
+Important:
+    ML prediction and factual verification are separate signals.
+
+The system should not label a claim as false merely because the classifier
+predicts FAKE or because a search does not find supporting evidence.
+
+
+6. FINAL APPLICATION WORKFLOW
+-----------------------------
+
+    User creates a post
+            |
+            v
+       Backend API
+            |
+            v
+       AI moderation
+        /                 v            v
+    MuRIL       Image model
+       \            /
+        \          /
+         v        v
+       Multimodal analysis
+               |
+               v
+       Real-time verification
+               |
+               v
+        Evidence + verdict
+               |
+               v
+            Frontend
+               |
+               v
+       Community-note-style
+         contextual flag
+
+
+MODEL FILES
+-----------
+
+Current text model:
+    ./models/muril_combined
+
+Do not commit model weights, datasets, virtual environments, API keys,
+databases, or uploaded user content to the public source repository unless
+they are intentionally stored through an appropriate model/data hosting
+system.
+
+DOCUMENT STATUS
+---------------
+
+This document describes the current state of the ML work. Future
+multimodal and verification metrics should be added only after those
+components have actually been trained/tested.

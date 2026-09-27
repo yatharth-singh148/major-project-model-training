@@ -1,0 +1,53 @@
+MULTIMODAL FAKE NEWS DETECTION
+CURRENT MODEL METRICS
+=============================
+
+Report generated: 2026-09-27 12:37:36
+
+NOTE
+----
+These are dataset/split-specific experimental results.
+They should not be interpreted as universal real-world accuracy.
+
+1. MuRIL - Combined Indic + English
+-----------------------------------
+Type:       Transformer text classifier
+Checkpoint: ./models/muril_combined
+
+Validation metrics:
+    Accuracy  : 0.9984 (99.84%)
+    Precision : 0.9996 (99.96%)
+    Recall    : 0.9976 (99.76%)
+    F1-score  : 0.9986 (99.86%)
+
+Test metrics:
+    Accuracy  : 0.9976 (99.76%)
+    Precision : 0.9987 (99.87%)
+    Recall    : 0.9970 (99.70%)
+    F1-score  : 0.9979 (99.79%)
+
+2. TF-IDF + Logistic Regression
+-------------------------------
+Type:       Traditional ML baseline
+Checkpoint: N/A
+
+Validation metrics:
+Not available
+
+Test metrics:
+    Accuracy  : 0.9900 (99.00%)
+    Precision : 0.9871 (98.71%)
+    Recall    : 0.9968 (99.68%)
+    F1-score  : 0.9919 (99.19%)
+
+CURRENT MULTIMODAL STATUS
+--------------------------
+Image encoder: planned/pretrained encoder not yet evaluated
+Multimodal fusion: not yet trained/evaluated
+Real-time verification: backend component planned
+
+INTERPRETATION
+--------------
+The MuRIL model is a text classifier. Its confidence is not equivalent
+to factual certainty. Real-time evidence verification is intended to
+provide a separate factual-support signal.
